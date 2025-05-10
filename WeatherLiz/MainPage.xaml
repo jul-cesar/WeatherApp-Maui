@@ -7,8 +7,38 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-           
+
+            <SearchBar Placeholder="Busca un lugar del mundo" x:Name="searchBar" SearchButtonPressed="SearchBar_SearchButtonPressed"/>
+
+            <!-- Ciudad y región -->
+            <Label x:Name="CityLabel" 
+               FontSize="32" 
+               HorizontalOptions="Center" 
+               TextColor="Black" />
+
+            <!-- Condición del clima -->
+            <Image x:Name="WeatherIcon" 
+               HeightRequest="100" 
+               WidthRequest="100" 
+               HorizontalOptions="Center" />
+
+            <!-- Temperatura -->
+            <Label x:Name="TemperatureLabel" 
+               FontSize="48" 
+               HorizontalOptions="Center" 
+               TextColor="Black" />
+
+            <!-- Humedad y viento -->
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Label x:Name="HumidityLabel" 
+                   FontSize="18" 
+                   TextColor="Gray" 
+                   VerticalOptions="Center" />
+                <Label x:Name="WindLabel" 
+                   FontSize="18" 
+                   TextColor="Gray" 
+                   VerticalOptions="Center" />
+            </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

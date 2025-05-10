@@ -1,22 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.Json;
+using WeatherLiz.Models;
+using System.Net.Http;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
-namespace WeatherLiz.Services;
-
-public class WeatherService
+namespace WeatherLiz.Services
 {
-    public HttpClient _httpClient { get; set; }
-    private const string ApiURL = "https://api.weatherapi.com/v1";
-    private const string ApiKey = "";
-
-    public WeatherService()
+    public class WeatherService
     {
-        _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient;
+        private const string ApiURL = "https://api.weatherapi.com/v1";
+        private const string ApiKey = "8ddba815649e4371bfc74803241504";
+
+        public WeatherService()
+        {
+            _httpClient = new HttpClient();
+        }
+
+        public async Task<WeatherResponse> GetWeather(string city)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{ApiURL}/current.json?key={ApiKey}&q={city}&aqi=no");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error: {response.StatusCode}");
+                    return new WeatherResponse(); 
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseJson))
+                {
+                    Console.WriteLine("Error: Empty response.");
+                    return new WeatherResponse(); 
+                }
+
+                
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true, 
+                };
+
+                var weatherData = JsonSerializer.Deserialize<WeatherResponse>(responseJson, options);
+
+                if (weatherData == null)
+                {
+                    Console.WriteLine("Error: Deserialization failed.");
+                    return new WeatherResponse(); 
+                }
+
+                return weatherData;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return new WeatherResponse(); 
+            }
+        }
     }
-
-
 }
