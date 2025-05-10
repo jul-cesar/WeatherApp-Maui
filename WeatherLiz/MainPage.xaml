@@ -2,43 +2,68 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WeatherLiz.MainPage">
-
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+        <VerticalStackLayout Padding="30,0" Spacing="25">
 
-            <SearchBar Placeholder="Busca un lugar del mundo" x:Name="searchBar" SearchButtonPressed="SearchBar_SearchButtonPressed"/>
+            <!-- Barra de búsqueda -->
+            <SearchBar Placeholder="Busca un lugar del mundo" x:Name="searchBar" SearchButtonPressed="SearchBar_SearchButtonPressed" />
 
-            <!-- Ciudad y región -->
-            <Label x:Name="CityLabel" 
-               FontSize="32" 
-               HorizontalOptions="Center" 
-               TextColor="Black" />
+            <!-- Contenido que se muestra antes de la búsqueda -->
+            <StackLayout x:Name="InitialLayout" IsVisible="True">
+                <Label Text="¡Bienvenido! Busca una ciudad para ver el clima." 
+                       FontSize="24" 
+                       HorizontalOptions="Center" 
+                       TextColor="Gray" />
+            </StackLayout>
 
-            <!-- Condición del clima -->
-            <Image x:Name="WeatherIcon" 
-               HeightRequest="100" 
-               WidthRequest="100" 
-               HorizontalOptions="Center" />
+            <!-- Contenido que se muestra después de la búsqueda -->
+            <StackLayout x:Name="WeatherLayout" IsVisible="False">
+                <!-- Ciudad y región -->
+                <Label x:Name="CityLabel" FontSize="32" HorizontalOptions="Center" TextColor="Black" />
+                <Label x:Name="CountryLabel" FontSize="32" HorizontalOptions="Center" TextColor="Black" />
+                <Label x:Name="TimeLabel" FontSize="32" HorizontalOptions="Center" TextColor="Black" />
 
-            <!-- Temperatura -->
-            <Label x:Name="TemperatureLabel" 
-               FontSize="48" 
-               HorizontalOptions="Center" 
-               TextColor="Black" />
+                <!-- Condición del clima -->
+                <Image x:Name="WeatherIcon" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" />
 
-            <!-- Humedad y viento -->
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <Label x:Name="HumidityLabel" 
-                   FontSize="18" 
-                   TextColor="Gray" 
-                   VerticalOptions="Center" />
-                <Label x:Name="WindLabel" 
-                   FontSize="18" 
-                   TextColor="Gray" 
-                   VerticalOptions="Center" />
-            </HorizontalStackLayout>
+                <!-- Temperatura -->
+                <Label x:Name="TemperatureLabel" FontSize="48" HorizontalOptions="Center" TextColor="Black" />
+
+                <!-- Descripción del clima -->
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Label x:Name="DescriptionLabel" FontSize="18" TextColor="Gray" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <!-- Botón de favoritos -->
+                <Button x:Name="AddToFavoritesButton"
+                        Text="Agregar a Favoritos"
+                        Clicked="AddToFavoritesButton_Clicked"
+                        HorizontalOptions="Center" 
+                        IsVisible="True" />
+            </StackLayout>
+
+            <!-- CollectionView para mostrar los favoritos -->
+            <CollectionView x:Name="FavoritesCollectionView" 
+                            ItemsSource="{Binding FavoritesList}" 
+                            SelectionMode="Single"
+                          
+                            SelectionChanged="FavoritesCollectionView_SelectionChanged">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" Orientation="Horizontal">
+                            <Label Text="{Binding City}" 
+                                   FontSize="18" 
+                                   VerticalOptions="Center" 
+                                   HorizontalOptions="Start" />
+                            <Button Text="Eliminar"
+                                    HorizontalOptions="End"
+                                    Clicked="DeleteFavoriteButton_Clicked" 
+                                    BindingContext="{Binding .}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

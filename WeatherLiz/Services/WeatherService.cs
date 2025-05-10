@@ -20,7 +20,7 @@ namespace WeatherLiz.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{ApiURL}/current.json?key={ApiKey}&q={city}&aqi=no");
+                var response = await _httpClient.GetAsync($"{ApiURL}/current.json?key={ApiKey}&q={city}&aqi=no&lang=es");
 
                 if (!response.IsSuccessStatusCode)
                 {
