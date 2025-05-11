@@ -58,6 +58,8 @@ namespace WeatherLiz
         
             FavoritesList.Add(newFavorite);
 
+            AddToFavoritesButton.IsVisible = false;
+
             DisplayAlert("Favoritos", "Ciudad agregada a favoritos", "OK");
         }
 
@@ -72,14 +74,15 @@ namespace WeatherLiz
             {
                 
                 var weatherData = await _weatherService.GetWeather(searchText);
+           
 
                 
-                var cityKey = $"{weatherData.Location.Name}, {weatherData.Location.Region}";
+                var cityKey = $"{weatherData?.Location?.Name}, {weatherData?.Location?.Region}";
 
                
                 var existingFavorite = await _db.GetOneFavorito(cityKey);
 
-                if (existingFavorite != null)
+                if (existingFavorite != null && weatherData?.Location != null && weatherData?.Current != null)
                 {
                 
                     AddToFavoritesButton.IsVisible = false;
@@ -124,11 +127,14 @@ namespace WeatherLiz
                 }
                 else
                 {
-                    CityLabel.Text = "Weather data not found.";
+                    AddToFavoritesButton.IsVisible = false;
+
+                    CityLabel.Text = "Ciudad no encontrada.";
                     TemperatureLabel.Text = string.Empty;
                     WeatherIcon.Source = string.Empty;
                     DescriptionLabel.Text = string.Empty;
                     TimeLabel.Text = string.Empty;
+                    CountryLabel.Text = string.Empty;
                 }
             }
         }
@@ -230,7 +236,9 @@ namespace WeatherLiz
 
             if (favorite != null)
             {
-                
+                FavoritesCollectionView.SelectedItem = null;
+
+
                 CityLabel.Text = favorite.City;
                 CountryLabel.Text = favorite.Country;
                 TimeLabel.Text = favorite.Time;
